@@ -3,3 +3,6 @@
 
 # TypeScript
 dist/
+
+# environment variables
+.env
