@@ -1,0 +1,17 @@
+{
+  "name": "commute",
+  "version": "1.0.0",
+  "description": "💬 A Telegram bot for checking information about Singapore's public transport.",
+  "main": "dist/index.js",
+  "repository": "https://github.com/arashnrim/commute",
+  "author": "Arash <47273556+arashnrim@users.noreply.github.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "tsc --watch",
+    "build": "tsc --build"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.2"
+  }
+}
