@@ -42,30 +42,39 @@ const getStops = async () => {
   return stops;
 };
 
-getStops().then((stops) => {
-  console.info(`Retrieved! Found ${stops.length} bus stops.`);
-
-  // Adds the retrieved stops to the database
+const updateDatabase = async (stops: Stop[]) => {
   if (!process.env.MONGO_URI) {
     throw "MongoDB URI not found. Please enter it as an environment variable!";
   }
 
-  console.info("Updating MongoDB database...");
   const client = new MongoClient(process.env.MONGO_URI);
-  client.connect();
+  try {
+    // Adds the retrieved stops to the database
+    console.info("Updating MongoDB database...");
+    await client.connect();
 
-  const db = client.db("commute_db");
-  for (const stop of stops) {
-    db.collection("bus_stop").replaceOne(
-      { BusStopCode: stop.BusStopCode },
-      stop,
-      { upsert: true }
-    );
+    const database = client.db("commute_db");
+    const stopsCollection = database.collection("bus_stops");
+
+    for (const stop of stops) {
+      await stopsCollection.replaceOne(
+        { BusStopCode: { $eq: stop.BusStopCode } },
+        stop,
+        { upsert: true }
+      );
+    }
+  } finally {
+    console.info("Update complete!");
+    await client.close();
+    return;
   }
+};
 
-  console.info("Updated!");
-  client.close();
+getStops().then((stops) => {
+  console.info(`Retrieved! Found ${stops.length} bus stops.`);
 
-  console.info("Exiting...");
-  exit();
+  updateDatabase(stops).then(() => {
+    console.info("Exiting...");
+    exit();
+  });
 });
