@@ -1,5 +1,6 @@
 import { Telegraf } from "telegraf";
 import "dotenv/config";
+import { fetchArrival, parseInput, RejectionReason } from "./utils/arrival";
 
 if (!process.env.BOT_TOKEN) {
   throw "Bot token not found. Please enter it as an environment variable!";
@@ -31,12 +32,54 @@ Use this command to get arrival timings for a bus or train. Either one of the co
 
 /arrival <bus stop code> <bus number>
 /arrival <street name> <bus number>
-/arrival <train station code>
 
 I might prompt you for more information if I need it. Otherwise, I'll give you the arrival timings!
       `);
     return;
   }
+
+  parseInput(args).then((result) => {
+    switch (result) {
+      case RejectionReason.Service:
+        context.replyWithMarkdown(`
+*Whoops, that doesn't look right!*
+
+I don't think you've entered a valid bus service at the end of the command. Please try again.
+        `);
+        return;
+      case RejectionReason.Stop:
+        context.replyWithMarkdown(`
+*Whoops, that doesn't look right!*
+
+I don't think you've entered a valid bus stop in the command. Please try again.
+        `);
+        return;
+    }
+
+    // Fetches data from DataMall
+    fetchArrival(args[1], args[args.length - 1].toUpperCase()).then(
+      (arrivals) => {
+        var estimates: string[] = [];
+        const currentTime = new Date();
+
+        for (const arrival of arrivals) {
+          const difference =
+            new Date(arrival.EstimatedArrival).valueOf() -
+            currentTime.valueOf();
+          const estimate = Math.floor(difference / 1000 / 60);
+          if (estimate >= 0) {
+            estimates.push(`Estimated arrival: *${estimate} min*`);
+          }
+        }
+
+        context.replyWithMarkdown(`
+*${args[args.length - 1].toUpperCase()} at bus stop ${args[1]}*
+
+${estimates.join("\n")}
+        `);
+      }
+    );
+  });
 });
 
 bot.launch();
