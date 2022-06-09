@@ -25,7 +25,7 @@ const parseInput = async (args: string[]) => {
     throw "MongoDB URI not found. Please enter it as an environment variable!";
   }
   const client = new MongoClient(process.env.MONGO_URI);
-  client.connect();
+  await client.connect();
 
   // Checks the bus service
   const database = client.db("commute_db");
@@ -33,6 +33,8 @@ const parseInput = async (args: string[]) => {
   const serviceResult = await servicesCollection.findOne({
     ServiceNo: { $eq: finalArg.toUpperCase() },
   });
+  await client.close();
+
   if (!serviceResult) {
     return RejectionReason.Service;
   }
