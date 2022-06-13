@@ -1,7 +1,12 @@
 import { Telegraf } from "telegraf";
 import "dotenv/config";
-import { fetchArrival, parseInput, RejectionReason } from "./utils/arrival";
+import {
+  fetchArrivalTimings,
+  parseInput,
+  RejectionReason,
+} from "./utils/arrival";
 import { strings } from "./strings";
+import dedent from "dedent";
 
 if (!process.env.BOT_TOKEN) {
   throw "Bot token not found. Please enter it as an environment variable!";
@@ -23,16 +28,16 @@ bot.command("arrival", (context) => {
 
   parseInput(args).then((result) => {
     switch (result) {
-      case RejectionReason.Service:
+      case RejectionReason.ServiceNotFound:
         context.replyWithMarkdown(strings.invalidService);
         return;
-      case RejectionReason.Stop:
+      case RejectionReason.StopNotFound:
         context.replyWithMarkdown(strings.invalidStop);
         return;
     }
 
     // Fetches data from DataMall
-    fetchArrival(args[1], args[args.length - 1].toUpperCase()).then(
+    fetchArrivalTimings(args[1], args[args.length - 1].toUpperCase()).then(
       (arrivals) => {
         var estimates: string[] = [];
         const currentTime = new Date();
@@ -47,10 +52,10 @@ bot.command("arrival", (context) => {
           }
         }
 
-        context.replyWithMarkdown(`
-*${args[args.length - 1].toUpperCase()} at bus stop ${args[1]}*
+        context.replyWithMarkdown(dedent`
+        *${args[args.length - 1].toUpperCase()} at bus stop ${args[1]}*
 
-${estimates.join("\n")}
+        ${estimates.join("\n")}
         `);
       }
     );

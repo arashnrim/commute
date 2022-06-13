@@ -3,8 +3,8 @@ import axios from "axios";
 import { devStrings } from "../strings";
 
 enum RejectionReason {
-  Service = "SERVICE_NOT_FOUND",
-  Stop = "STOP_NOT_FOUND",
+  ServiceNotFound = "SERVICE_NOT_FOUND",
+  StopNotFound = "STOP_NOT_FOUND",
 }
 
 interface Arrival {
@@ -38,7 +38,7 @@ const parseInput = async (args: string[]) => {
     });
 
     if (!serviceResult) {
-      return RejectionReason.Service;
+      return RejectionReason.ServiceNotFound;
     }
 
     // Checks the bus stop code
@@ -47,7 +47,7 @@ const parseInput = async (args: string[]) => {
       BusStopCode: { $eq: args[1] },
     });
     if (!stopResult) {
-      return RejectionReason.Stop;
+      return RejectionReason.StopNotFound;
     }
   } catch (e) {
     console.error(e);
@@ -56,7 +56,7 @@ const parseInput = async (args: string[]) => {
   }
 };
 
-const fetchArrival = async (stop: string, service: string) => {
+const fetchArrivalTimings = async (stop: string, service: string) => {
   if (!process.env.ACCOUNT_KEY) {
     throw devStrings.noDataMallKey;
   }
@@ -79,4 +79,4 @@ const fetchArrival = async (stop: string, service: string) => {
   return arrivals;
 };
 
-export { parseInput, RejectionReason, fetchArrival };
+export { parseInput, RejectionReason, fetchArrivalTimings };
