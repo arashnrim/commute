@@ -1,5 +1,6 @@
 import { MongoClient } from "mongodb";
 import axios from "axios";
+import { devStrings } from "../strings";
 
 enum RejectionReason {
   Service = "SERVICE_NOT_FOUND",
@@ -22,7 +23,7 @@ const parseInput = async (args: string[]) => {
   const finalArg = args[args.length - 1];
 
   if (!process.env.MONGO_URI) {
-    throw "MongoDB URI not found. Please enter it as an environment variable!";
+    throw devStrings.noMongoURI;
   }
   const client = new MongoClient(process.env.MONGO_URI);
   await client.connect();
@@ -51,7 +52,7 @@ const parseInput = async (args: string[]) => {
 
 const fetchArrival = async (stop: string, service: string) => {
   if (!process.env.ACCOUNT_KEY) {
-    throw "DataMall account key not found. Please enter it as an environment variable!";
+    throw devStrings.noDataMallKey;
   }
 
   const response = await axios.get(

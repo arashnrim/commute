@@ -34,3 +34,10 @@ export const strings = {
   I don't think you've entered a valid bus stop in the command. Please try again.
   `,
 };
+
+export const devStrings = {
+  noDataMallKey:
+    "DataMall account key not found. Please enter it as an environment variable!",
+  noMongoURI:
+    "MongoDB URI not found. Please enter it as an environment variable!",
+};
