@@ -33,6 +33,12 @@ export const strings = {
 
   I don't think you've entered a valid bus stop in the command. Please try again.
   `,
+
+  invalidArrival: dedent`
+  *Whoops, that doesn't look right!*
+
+  It seems like the bus service you've entered doesn't serve the provided bus stop. Please try again.
+  `,
 };
 
 export const devStrings = {

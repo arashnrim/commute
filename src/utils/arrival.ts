@@ -71,6 +71,7 @@ const fetchArrivalTimings = async (stop: string, service: string) => {
   );
 
   const data = response.data.Services;
+  if (data.length === 0) return data;
   const arrivals: Arrival[] = [
     data[0].NextBus,
     data[0].NextBus2,
