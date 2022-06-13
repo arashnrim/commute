@@ -26,27 +26,33 @@ const parseInput = async (args: string[]) => {
     throw devStrings.noMongoURI;
   }
   const client = new MongoClient(process.env.MONGO_URI);
-  await client.connect();
 
-  // Checks the bus service
-  const database = client.db("commute_db");
-  const servicesCollection = database.collection("bus_services");
-  const serviceResult = await servicesCollection.findOne({
-    ServiceNo: { $eq: finalArg.toUpperCase() },
-  });
-  await client.close();
+  try {
+    await client.connect();
 
-  if (!serviceResult) {
-    return RejectionReason.Service;
-  }
+    // Checks the bus service
+    const database = client.db("commute_db");
+    const servicesCollection = database.collection("bus_services");
+    const serviceResult = await servicesCollection.findOne({
+      ServiceNo: { $eq: finalArg.toUpperCase() },
+    });
 
-  // Checks the bus stop code
-  const stopsCollection = database.collection("bus_stops");
-  const stopResult = await stopsCollection.findOne({
-    BusStopCode: { $eq: args[1] },
-  });
-  if (!stopResult) {
-    return RejectionReason.Stop;
+    if (!serviceResult) {
+      return RejectionReason.Service;
+    }
+
+    // Checks the bus stop code
+    const stopsCollection = database.collection("bus_stops");
+    const stopResult = await stopsCollection.findOne({
+      BusStopCode: { $eq: args[1] },
+    });
+    if (!stopResult) {
+      return RejectionReason.Stop;
+    }
+  } catch (e) {
+    console.error(e);
+  } finally {
+    await client.close();
   }
 };
 
