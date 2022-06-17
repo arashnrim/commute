@@ -6,8 +6,3 @@ dist/
 
 # environment variables
 .env
-
-# lockfiles
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
