@@ -6,11 +6,11 @@ import {
   parseInput,
   RejectionReason,
 } from "./utils/arrival";
-import { strings } from "./strings";
+import { devStrings, strings } from "./strings";
 import dedent from "dedent";
 
 if (!process.env.BOT_TOKEN) {
-  throw "Bot token not found. Please enter it as an environment variable!";
+  throw devStrings.noTelegramKey;
 }
 const bot = new Telegraf(process.env.BOT_TOKEN);
 

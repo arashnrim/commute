@@ -2,6 +2,7 @@ import { MongoClient } from "mongodb";
 import "dotenv/config";
 import axios from "axios";
 import { exit } from "process";
+import { devStrings } from "../src/strings";
 
 interface Service {
   ServiceNo: string;
@@ -19,7 +20,7 @@ interface Service {
 
 const getServices = async () => {
   if (!process.env.ACCOUNT_KEY) {
-    throw "DataMall account key not found. Please enter it as an environment variable!";
+    throw devStrings.noDataMallKey;
   }
 
   console.info("Fetching list of bus stops from the LTA...");
@@ -50,7 +51,7 @@ const getServices = async () => {
 
 const updateDatabase = async (services: Service[]) => {
   if (!process.env.MONGO_URI) {
-    throw "MongoDB URI not found. Please enter it as an environment variable!";
+    throw devStrings.noMongoURI;
   }
 
   const client = new MongoClient(process.env.MONGO_URI);

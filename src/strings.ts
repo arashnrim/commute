@@ -44,6 +44,8 @@ export const strings = {
 };
 
 export const devStrings = {
+  noTelegramKey:
+    "Telegram bot key not found. Please enter it as an environment variable!",
   noDataMallKey:
     "DataMall account key not found. Please enter it as an environment variable!",
   noMongoURI:
