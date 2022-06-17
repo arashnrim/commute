@@ -80,4 +80,37 @@ const fetchArrivalTimings = async (stop: string, service: string) => {
   return arrivals;
 };
 
-export { parseInput, RejectionReason, fetchArrivalTimings };
+const displayArrivalTimings = (arrivals: Arrival[]) => {
+  if (arrivals.length === 0) {
+    return [];
+  } else {
+    var estimates: string[] = [];
+    const currentTime = new Date();
+
+    for (const arrival of arrivals) {
+      const difference =
+        new Date(arrival.EstimatedArrival).valueOf() - currentTime.valueOf();
+      const estimate = Math.floor(difference / 1000 / 60);
+      if (estimate >= 0) {
+        estimates.push(
+          `Estimated arrival: *${estimate} min* (${new Date(
+            arrival.EstimatedArrival
+          ).toLocaleTimeString("en-SG", {
+            hour12: true,
+            hour: "numeric",
+            minute: "numeric",
+          })})`
+        );
+      }
+    }
+
+    return estimates;
+  }
+};
+
+export {
+  parseInput,
+  RejectionReason,
+  fetchArrivalTimings,
+  displayArrivalTimings,
+};

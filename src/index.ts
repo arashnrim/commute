@@ -1,6 +1,7 @@
 import { Telegraf } from "telegraf";
 import "dotenv/config";
 import {
+  displayArrivalTimings,
   fetchArrivalTimings,
   parseInput,
   RejectionReason,
@@ -39,35 +40,15 @@ bot.command("arrival", (context) => {
     // Fetches data from DataMall
     fetchArrivalTimings(args[1], args[args.length - 1].toUpperCase()).then(
       (arrivals) => {
-        if (arrivals.length === 0) {
+        const estimates = displayArrivalTimings(arrivals);
+        if (estimates.length === 0) {
           context.replyWithMarkdown(strings.invalidArrival);
         } else {
-          var estimates: string[] = [];
-          const currentTime = new Date();
-
-          for (const arrival of arrivals) {
-            const difference =
-              new Date(arrival.EstimatedArrival).valueOf() -
-              currentTime.valueOf();
-            const estimate = Math.floor(difference / 1000 / 60);
-            if (estimate >= 0) {
-              estimates.push(
-                `Estimated arrival: *${estimate} min* (${new Date(
-                  arrival.EstimatedArrival
-                ).toLocaleTimeString("en-SG", {
-                  hour12: true,
-                  hour: "numeric",
-                  minute: "numeric",
-                })})`
-              );
-            }
-          }
-
           context.replyWithMarkdown(dedent`
-        *${args[args.length - 1].toUpperCase()} at bus stop ${args[1]}*
+          *${args[args.length - 1].toUpperCase()} at bus stop ${args[1]}*
 
-        ${estimates.join("\n")}
-        `);
+          ${estimates.join("\n")}
+          `);
         }
       }
     );
