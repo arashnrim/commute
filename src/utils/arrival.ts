@@ -1,10 +1,11 @@
-import { MongoClient } from "mongodb";
+import { Code, MongoClient } from "mongodb";
 import axios from "axios";
 import { devStrings } from "../strings";
 
 enum RejectionReason {
   ServiceNotFound = "SERVICE_NOT_FOUND",
   StopNotFound = "STOP_NOT_FOUND",
+  RoadNotFound = "ROAD_NOT_FOUND",
 }
 
 interface Arrival {
@@ -20,8 +21,6 @@ interface Arrival {
 }
 
 const parseInput = async (args: string[]) => {
-  const finalArg = args[args.length - 1];
-
   if (!process.env.MONGO_URI) {
     throw devStrings.noMongoURI;
   }
@@ -31,23 +30,39 @@ const parseInput = async (args: string[]) => {
     await client.connect();
 
     // Checks the bus service
+    const service = args[args.length - 1];
     const database = client.db("commute_db");
     const servicesCollection = database.collection("bus_services");
     const serviceResult = await servicesCollection.findOne({
-      ServiceNo: { $eq: finalArg.toUpperCase() },
+      ServiceNo: { $eq: service.toUpperCase() },
     });
 
     if (!serviceResult) {
       return RejectionReason.ServiceNotFound;
     }
 
-    // Checks the bus stop code
     const stopsCollection = database.collection("bus_stops");
-    const stopResult = await stopsCollection.findOne({
-      BusStopCode: { $eq: args[0] },
-    });
-    if (!stopResult) {
-      return RejectionReason.StopNotFound;
+    if (!isNaN(parseInt(args[0]))) {
+      // Checks the bus stop code
+      const code = args[0];
+      const stopResult = await stopsCollection.findOne({
+        BusStopCode: { $eq: code },
+      });
+      if (!stopResult) {
+        return RejectionReason.StopNotFound;
+      }
+    } else {
+      // Retrieves a list of bus stops along the given road
+      const road = args
+        .slice(0, -1)
+        .map((part) => (part = part[0].toUpperCase() + part.slice(1)))
+        .join(" ");
+      const stopsResult = await stopsCollection.find({
+        RoadName: { $eq: road },
+      });
+      const stops = await stopsResult.toArray();
+
+      return stops;
     }
   } catch (e) {
     console.error(e);

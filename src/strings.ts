@@ -36,10 +36,16 @@ export const strings = {
   I don't think you've entered a valid bus stop in the command. Please try again.
   `,
 
+  invalidRoad: dedent`
+  *Whoops, that doesn't look right!*
+
+  I don't think you've entered a valid road that a bus service visits. Please try again.
+  `,
+
   invalidArrival: dedent`
   *Whoops, that doesn't look right!*
 
-  It seems like the bus service you've entered doesn't serve the provided bus stop. Please try again.
+  It seems like the bus service you've entered doesn't serve the provided bus stop or road. Please try again.
   `,
 };
 
