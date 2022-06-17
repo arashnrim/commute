@@ -61,6 +61,9 @@ const parseInput = async (args: string[]) => {
         RoadName: { $eq: road },
       });
       const stops = await stopsResult.toArray();
+      if (!stops) {
+        return RejectionReason.RoadNotFound;
+      }
 
       return stops;
     }

@@ -3,12 +3,12 @@ import "dotenv/config";
 import {
   displayArrivalTimings,
   fetchArrivalTimings,
-  parseInput,
   RejectionReason,
+  parseInput,
 } from "./utils/arrival";
 import { devStrings, strings } from "./strings";
 import dedent from "dedent";
-import { InlineKeyboardButton } from "telegraf/typings/core/types/typegram";
+import type { InlineKeyboardButton } from "telegraf/typings/core/types/typegram";
 
 if (!process.env.BOT_TOKEN) {
   throw devStrings.noTelegramKey;
@@ -36,12 +36,15 @@ bot.on("text", (context) => {
       case RejectionReason.StopNotFound:
         context.replyWithMarkdown(strings.invalidStop);
         return;
+      case RejectionReason.RoadNotFound:
+        context.replyWithMarkdown(strings.invalidRoad);
+        return;
     }
 
     if (Array.isArray(result)) {
-      const options: object[][] = [[]];
+      const options: InlineKeyboardButton[][] = [[]];
       for (const stop of result) {
-        if (options[options.length - 1].length === 8) {
+        if (options[options.length - 1].length === 2) {
           options.push([
             {
               text: stop.Description,
@@ -56,14 +59,9 @@ bot.on("text", (context) => {
         }
       }
 
-      const keyboardOptions = options as unknown as InlineKeyboardButton[][];
-
-      context.reply(
-        "There are multiple bus stops along the road you've provided. Which one do you want to look at?",
-        {
-          reply_markup: { inline_keyboard: keyboardOptions },
-        }
-      );
+      context.reply(strings.multipleStops, {
+        reply_markup: { inline_keyboard: options },
+      });
     } else {
       // Fetches data from DataMall
       fetchArrivalTimings(args[0], args[args.length - 1].toUpperCase()).then(
@@ -85,11 +83,6 @@ bot.on("text", (context) => {
 });
 
 bot.on("callback_query", async (context) => {
-  console.log(context.inlineMessageId);
-  if (context.inlineMessageId) {
-    await context.deleteMessage(parseInt(context.inlineMessageId));
-  }
-
   if (!context.callbackQuery.data) {
     context.replyWithMarkdown("Sorry, something went wrong.");
     return;
@@ -100,7 +93,7 @@ bot.on("callback_query", async (context) => {
     (arrivals) => {
       const estimates = displayArrivalTimings(arrivals);
       if (estimates.length === 0) {
-        context.replyWithMarkdown(strings.invalidArrival);
+        context.replyWithMarkdown(strings.unavailableArrival);
       } else {
         context.replyWithMarkdown(dedent`
           *${data[data.length - 1].toUpperCase()} at bus stop ${data[0]}*

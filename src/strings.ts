@@ -47,6 +47,16 @@ export const strings = {
 
   It seems like the bus service you've entered doesn't serve the provided bus stop or road. Please try again.
   `,
+
+  unavailableArrival: dedent`
+  *Whoops, something went wrong!*
+
+  I'm not able to retrieve information at that bus stop. Please try again.
+  `,
+
+  multipleStops: dedent`
+  There are multiple bus stops along the road you've provided. Which one do you want to look at?
+  `,
 };
 
 export const devStrings = {
