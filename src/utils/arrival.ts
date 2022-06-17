@@ -117,6 +117,7 @@ const displayArrivalTimings = (arrivals: Arrival[]) => {
             hour12: true,
             hour: "numeric",
             minute: "numeric",
+            timeZone: "Asia/Singapore",
           })})`
         );
       }
