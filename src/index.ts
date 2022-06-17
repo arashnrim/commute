@@ -18,14 +18,14 @@ bot.start((context) => {
   context.replyWithMarkdown(strings.start);
 });
 
-bot.command("arrival", (context) => {
-  const args = context.message.text.split(" ");
+bot.command("help", (context) => {
+  // Displays help message
+  context.replyWithMarkdown(strings.help);
+  return;
+});
 
-  if (args.length === 1 && args[0] === "/arrival") {
-    // Displays help message
-    context.replyWithMarkdown(strings.arrivalHelp);
-    return;
-  }
+bot.on("text", (context) => {
+  const args = context.message.text.split(" ");
 
   parseInput(args).then((result) => {
     switch (result) {
@@ -38,7 +38,7 @@ bot.command("arrival", (context) => {
     }
 
     // Fetches data from DataMall
-    fetchArrivalTimings(args[1], args[args.length - 1].toUpperCase()).then(
+    fetchArrivalTimings(args[0], args[args.length - 1].toUpperCase()).then(
       (arrivals) => {
         const estimates = displayArrivalTimings(arrivals);
         if (estimates.length === 0) {

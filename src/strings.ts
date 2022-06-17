@@ -6,18 +6,20 @@ export const strings = {
 
   Use me to find out arrival timings and other useful information. Instead of having to frequently check a navigation app, all you need to do is to send me an identifier (like a bus stop code) and your bus in question. I'll come back with approximate arrival times, given by the LTA!
 
-  To use me, call the /arrival command. If you aren't sure on what to give, just use the command as it is and I'll give some help. I'll try to get back to you as soon as possible!
+  To use me, send me the identifier and bus service. If you aren't sure on what to give, just use the /help and I'll give some help. I'll try to get back to you as soon as possible!
 
   ⚠️ *Early access warning*
   I'm still in the alpha stage of things, and I'm currently still in development. If you'd like, check out my source code on [GitHub](https://github.com/arashnrim/commute); if you're an avid developer, feel free to fork and contribute!
   `,
 
-  arrivalHelp: dedent`
-  */arrival — get arrival timings*
+  help: dedent`
+  *Getting arrival timings*
 
-  Use this command to get arrival timings for a bus or train. Either one of the commands below will be valid.
+  To get arrival timings, send me a bus stop code and the service. Below is an example.
 
-  /arrival <bus stop code> <bus number>
+  <bus stop code> <bus number>
+
+  For example, send me *43009 61* if you'd like to find out the arrival timings for bus service 61 at bus stop 43009 (or the Bukit Batok Bus Interchange!).
 
   I might prompt you for more information if I need it. Otherwise, I'll give you the arrival timings!
   `,

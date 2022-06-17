@@ -44,7 +44,7 @@ const parseInput = async (args: string[]) => {
     // Checks the bus stop code
     const stopsCollection = database.collection("bus_stops");
     const stopResult = await stopsCollection.findOne({
-      BusStopCode: { $eq: args[1] },
+      BusStopCode: { $eq: args[0] },
     });
     if (!stopResult) {
       return RejectionReason.StopNotFound;
