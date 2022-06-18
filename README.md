@@ -1,6 +1,6 @@
-# commute
-
 ![](banner.svg)
+
+# commute
 
 Welcome to the repository for Commute! Commute is a simple Telegram bot that I wrote with the intention to aid me with public transportation in Singapore. It's mostly meant for personal use, but feel free to check it out anyway and tweak it for your use!
 
