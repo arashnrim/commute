@@ -17,9 +17,12 @@ export const strings = {
 
   To get arrival timings, send me a bus stop code and the service. Below is an example.
 
-  <bus stop code> <bus number>
+  <bus stop code> <bus service number>
+  <road name> <bus service number>
 
   For example, send me *43009 61* if you'd like to find out the arrival timings for bus service 61 at bus stop 43009 (or the Bukit Batok Bus Interchange!).
+
+  Alternatively, send me *Jln Jurong kechil 61* if you'd like to find out the arrival timings for bus service 61 at Jln Jurong Kechil. I'll prompt you for which bus stop you'd like to see!
 
   I might prompt you for more information if I need it. Otherwise, I'll give you the arrival timings!
   `,
