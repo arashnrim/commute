@@ -113,8 +113,8 @@ bot.on(callbackQuery("data"), async (context) => {
     } else {
       context.replyWithMarkdownV2(dedent`
           *${data[1].toUpperCase()} at bus stop ${data[0]}* \(${data
-        .slice(2)
-        .join(" ")}\)
+            .slice(2)
+            .join(" ")}\)
 
           ${estimates.join("\n")}
           `);
@@ -128,4 +128,4 @@ bot.launch();
 process.once("SIGINT", () => bot.stop("SIGINT"));
 process.once("SIGTERM", () => bot.stop("SIGTERM"));
 
-export { bot };
+export default bot;
