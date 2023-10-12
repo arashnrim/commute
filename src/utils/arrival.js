@@ -1,6 +1,7 @@
 import { MongoClient } from "mongodb";
 import axios from "axios";
 import { devStrings } from "../strings.js";
+import "dotenv/config";
 
 if (!process.env.MONGO_URI) {
   throw devStrings.noMongoURI;

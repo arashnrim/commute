@@ -26,6 +26,9 @@ bot.help((context) => {
 });
 
 bot.on(message("text"), (context) => {
+  console.log(
+    `New message from user ${context.from.id}. Request: ${context.message.text}`
+  );
   const args = context.message.text.split(" ");
 
   parseInput(args).then((result) => {
@@ -85,6 +88,9 @@ bot.on(message("text"), (context) => {
 });
 
 bot.on(callbackQuery("data"), async (context) => {
+  console.log(
+    `New callback query from user ${context.from.id}. Request: ${context.callbackQuery.data}`
+  );
   if (!context.callbackQuery.data) {
     context.replyWithMarkdownV2("Sorry, something went wrong.");
     return;
