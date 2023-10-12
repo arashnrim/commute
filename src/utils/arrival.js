@@ -1,31 +1,14 @@
-import { Code, MongoClient } from "mongodb";
+import { MongoClient } from "mongodb";
 import axios from "axios";
-import { devStrings } from "../strings";
+import { devStrings } from "../strings.js";
+import "dotenv/config";
 
-enum RejectionReason {
-  ServiceNotFound = "SERVICE_NOT_FOUND",
-  StopNotFound = "STOP_NOT_FOUND",
-  RoadNotFound = "ROAD_NOT_FOUND",
+if (!process.env.MONGO_URI) {
+  throw devStrings.noMongoURI;
 }
+const client = new MongoClient(process.env.MONGO_URI);
 
-interface Arrival {
-  OriginCode: string;
-  DestinationCode: string;
-  EstimatedArrival: Date;
-  Latitude: number;
-  Longitude: number;
-  VisitNumber: number;
-  Load: string;
-  Feature: string;
-  Type: string;
-}
-
-const parseInput = async (args: string[]) => {
-  if (!process.env.MONGO_URI) {
-    throw devStrings.noMongoURI;
-  }
-  const client = new MongoClient(process.env.MONGO_URI);
-
+const parseInput = async (args) => {
   try {
     await client.connect();
 
@@ -38,7 +21,7 @@ const parseInput = async (args: string[]) => {
     });
 
     if (!serviceResult) {
-      return RejectionReason.ServiceNotFound;
+      return "SERVICE_NOT_FOUND";
     }
 
     const stopsCollection = database.collection("bus_stops");
@@ -49,7 +32,7 @@ const parseInput = async (args: string[]) => {
         BusStopCode: { $eq: code },
       });
       if (!stopResult) {
-        return RejectionReason.StopNotFound;
+        return "STOP_NOT_FOUND";
       }
     } else {
       // Retrieves a list of bus stops along the given road
@@ -62,7 +45,7 @@ const parseInput = async (args: string[]) => {
       });
       const stops = await stopsResult.toArray();
       if (!stops) {
-        return RejectionReason.RoadNotFound;
+        return "ROAD_NOT_FOUND";
       }
 
       return stops;
@@ -74,7 +57,7 @@ const parseInput = async (args: string[]) => {
   }
 };
 
-const fetchArrivalTimings = async (stop: string, service: string) => {
+const getArrivalTimings = async (stop, service) => {
   if (!process.env.ACCOUNT_KEY) {
     throw devStrings.noDataMallKey;
   }
@@ -90,19 +73,15 @@ const fetchArrivalTimings = async (stop: string, service: string) => {
 
   const data = response.data.Services;
   if (data.length === 0) return data;
-  const arrivals: Arrival[] = [
-    data[0].NextBus,
-    data[0].NextBus2,
-    data[0].NextBus3,
-  ];
+  const arrivals = [data[0].NextBus, data[0].NextBus2, data[0].NextBus3];
   return arrivals;
 };
 
-const displayArrivalTimings = (arrivals: Arrival[]) => {
+const displayArrivalTimings = (arrivals) => {
   if (arrivals.length === 0) {
     return [];
   } else {
-    var estimates: string[] = [];
+    var estimates = [];
     const currentTime = new Date();
 
     for (const arrival of arrivals) {
@@ -111,14 +90,14 @@ const displayArrivalTimings = (arrivals: Arrival[]) => {
       const estimate = Math.floor(difference / 1000 / 60);
       if (estimate >= 0) {
         estimates.push(
-          `Estimated arrival: *${estimate} min* (${new Date(
+          `Estimated arrival: *${estimate} min* \\(${new Date(
             arrival.EstimatedArrival
           ).toLocaleTimeString("en-SG", {
             hour12: true,
             hour: "numeric",
             minute: "numeric",
             timeZone: "Asia/Singapore",
-          })})`
+          })}\\)`
         );
       }
     }
@@ -127,9 +106,4 @@ const displayArrivalTimings = (arrivals: Arrival[]) => {
   }
 };
 
-export {
-  parseInput,
-  RejectionReason,
-  fetchArrivalTimings,
-  displayArrivalTimings,
-};
+export { parseInput, getArrivalTimings, displayArrivalTimings };
