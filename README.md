@@ -14,47 +14,53 @@ This brief explainer assumes that you have a version of Node and a Node package 
 
 1. To get started with the repository, first clone the repository and change your working directory:
 
-    ```
-    git clone https://github.com/arashnrim/commute && cd commute
-    ```
+   ```
+   git clone https://github.com/arashnrim/commute && cd commute
+   ```
 
 2. If you aren't a pnpm user, remove the `pnpm-lock.yaml` file.
 
-    ```
-    rm pnpm-lock.yaml
-    ```
+   ```
+   rm pnpm-lock.yaml
+   ```
 
 3. Install the required dependencies.
 
-    ```
-    npm i # or
-    yarn # or
-    pnpm i
-    ```
+   ```
+   npm i # or
+   yarn # or
+   pnpm i
+   ```
 
 4. Contact [BotFather](http://t.me/BotFather) to create a bot and keep note of the key. Do not share this key with anyone else!
 
 5. Create a MongoDB database and keep note of its address. Do not share this with anyone else!
 
-    > I used [Railway](https://railway.app) to host my bot and set up a MongoDB database. You can choose where to host and run your bot and database, but just a little good-to-know especially if you aren't sure how to create a database!
+   > ~~I used [Railway](https://railway.app) to host my bot and set up a MongoDB database. You can choose where to host and run your bot and database, but just a little good-to-know especially if you aren't sure how to create a database!~~
+   >
+   > I now use [MongoDB Atlas](https://www.mongodb.com/atlas/database) to host a MongoDB server and run the bot locally using an always-on\* Raspberry Pi via the compiled Docker package.
+   >
+   > \*_I'm learning more about self-hosting with the Raspberry Pi, so this is a little experimental project too to see if this works!_
 
 6. Sign up for an account key at the [LTA's DataMall](https://datamall.lta.gov.sg). Do not share this key with anyone else!
 
 7. Create an environment variable file (`.env`) and add your secrets inside; remember to replace the placeholders (in `<` and `>` with your own values!):
 
-    ```
-    BOT_TOKEN=<token>
-    MONGO_URI=<uri>
-    ACCOUNT_KEY=<key>
-    ```
+   ```
+   BOT_TOKEN=<token>
+   MONGO_URI=<uri>
+   ACCOUNT_KEY=<key>
+   ```
+
+   You may use the `.env.example` file as an example.
 
 8. Run the `dev` script to run the bot.
 
-    ```
-    npm dev # or
-    yarn dev # or
-    pnpm dev
-    ```
+   ```
+   npm dev # or
+   yarn dev # or
+   pnpm dev
+   ```
 
 9. To deploy the bot, configure your deployment service to run the `start` command.
 
