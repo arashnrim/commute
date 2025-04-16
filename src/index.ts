@@ -3,12 +3,14 @@ import { Bot } from "grammy";
 
 dotenv.config();
 
-const BOT_TOKEN = process.env.BOT_TOKEN;
-if (!BOT_TOKEN) {
-  throw new Error("BOT_TOKEN is not defined as an environment variable.");
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+if (!TELEGRAM_BOT_TOKEN) {
+  throw new Error(
+    "TELEGRAM_BOT_TOKEN is not defined as an environment variable."
+  );
 }
 
-const bot = new Bot(BOT_TOKEN);
+const bot = new Bot(TELEGRAM_BOT_TOKEN);
 
 bot.on("message", (ctx) => {
   ctx.reply("Hello, world!");

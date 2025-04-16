@@ -4,7 +4,8 @@
   "description": "💬 A Telegram bot for checking information about Singapore's public transport.",
   "scripts": {
     "start": "tsx src/index.ts",
-    "dev": "tsx --watch src/index.ts"
+    "dev": "tsx --watch src/index.ts",
+    "prepare": "tsx scripts/prepare.ts"
   },
   "keywords": [],
   "author": "",
